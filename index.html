@@ -1,60 +1,81 @@
-import React, { useState } from 'react';
+# Simpan sebagai `index.html`
 
-export default function TicketingApp(){
- const tickets=[
- {id:'bundling',name:'BUNDLING TELKOMSEL 5G X BLABLABLA FESTIVAL - VIP',price:450000,desc:'1 tiket / 1 orang • Akses VIP • Full Package Simpati 8 Run • Pulsa Rp172 ribu • Harga diluar pajak & biaya admin'},
- {id:'reg',name:'NORMAL SALE - REGULER',price:300000,desc:'1 tiket / 1 orang • Harga diluar pajak & biaya admin'},
- {id:'vip',name:'NORMAL SALE - VIP',price:400000,desc:'1 tiket / 1 orang • Harga diluar pajak & biaya admin'}
- ];
- const [step,setStep]=useState(1);
- const [selected,setSelected]=useState(tickets[0]);
- const [qty,setQty]=useState(1);
- const [form,setForm]=useState({name:'',email:'',wa:''});
- const total=selected.price*qty;
- const reset=()=>{setStep(1);setQty(1);setSelected(tickets[0]);setForm({name:'',email:'',wa:''})}
- return <div className='min-h-screen bg-gray-100 p-4 md:p-8'>
- <div className='max-w-3xl mx-auto'>
- <div className='bg-white rounded-3xl shadow-xl overflow-hidden'>
- <div className='bg-black text-white p-6'>
- <div className='text-3xl font-bold'>BLA BLA BLA FESTIVAL</div>
- <div className='text-xl'>KUBU RAYA - PONTIANAK</div>
- <div className='mt-3 text-sm opacity-90'>QUBU RESORT • Sunday, April 19, 2026 • 1:00 PM - 10:00 PM</div>
- <div className='flex gap-3 mt-4'>
- {[1,2,3].map(s=><div key={s} className={`px-4 py-2 rounded-full ${step===s?'bg-green-500':'bg-gray-700'}`}>Step {s}</div>)}
- </div></div>
- {step===1 && <div className='p-6 space-y-6'>
- <h2 className='text-2xl font-bold'>Pilih Tiket</h2>
- {tickets.map(t=><button key={t.id} onClick={()=>setSelected(t)} className={`w-full text-left border-2 rounded-3xl p-5 ${selected.id===t.id?'border-green-500':'border-gray-200'}`}>
- <div className='flex justify-between items-start gap-4'>
- <div><div className='font-bold text-lg'>{t.name}</div><div className='text-sm text-gray-500 mt-2'>{t.desc}</div><div className='text-blue-700 font-bold mt-3'>Rp {t.price.toLocaleString('id-ID')}</div></div>
- <span className='bg-green-100 text-green-700 px-3 py-2 rounded-2xl font-semibold'>AVAILABLE</span>
- </div></button>)}
- <h2 className='text-2xl font-bold pt-4'>Data Pembeli</h2>
- <input placeholder='Nama Lengkap' className='w-full p-4 rounded-2xl border' value={form.name} onChange={e=>setForm({...form,name:e.target.value})}/>
- <input placeholder='Email' className='w-full p-4 rounded-2xl border' value={form.email} onChange={e=>setForm({...form,email:e.target.value})}/>
- <input placeholder='No WhatsApp' className='w-full p-4 rounded-2xl border' value={form.wa} onChange={e=>setForm({...form,wa:e.target.value})}/>
- <input type='number' min='1' value={qty} onChange={e=>setQty(Number(e.target.value)||1)} className='w-full p-4 rounded-2xl border'/>
- <div className='bg-gray-50 p-4 rounded-2xl font-semibold'>Total: Rp {total.toLocaleString('id-ID')}</div>
- <button onClick={()=>setStep(2)} className='w-full bg-black text-white p-4 rounded-2xl text-lg'>Lanjut Pembayaran</button>
- </div>}
- {step===2 && <div className='p-6 space-y-6'>
- <h2 className='text-2xl font-bold'>Pembayaran QRIS</h2>
- <div className='border-2 border-dashed rounded-3xl p-8 text-center'>
- <div className='text-lg font-semibold mb-4'>QRIS TICKET DIGITAL</div>
- <div className='bg-gray-200 h-64 rounded-2xl flex items-center justify-center'><img src='/qris-ticket-digital.jpg' alt='QRIS Payment' className='max-h-64 mx-auto rounded-2xl' /></div>
- </div>
- <div className='bg-yellow-50 p-4 rounded-2xl'>Transfer tepat sejumlah <b>Rp {total.toLocaleString('id-ID')}</b></div>
- <label className='block border rounded-2xl p-4'>Upload Bukti Pembayaran<input type='file' className='block mt-3'/></label>
- <div className='flex gap-4'>
- <button onClick={()=>setStep(1)} className='flex-1 border p-4 rounded-2xl'>Kembali</button>
- <button onClick={()=>setStep(3)} className='flex-1 bg-green-600 text-white p-4 rounded-2xl'>Kirim Pembayaran</button>
- </div>
- </div>}
- {step===3 && <div className='p-10 text-center'>
- <div className='text-5xl mb-4'>🎉</div>
- <h2 className='text-3xl font-bold'>Terima Kasih!</h2>
- <p className='text-gray-600 mt-4'>Data pembelian Anda berhasil dikirim. Tim kami akan memverifikasi pembayaran Anda.</p>
- <button onClick={reset} className='mt-8 bg-black text-white px-8 py-4 rounded-2xl'>Kembali ke Awal</button>
- </div>}
- </div></div></div>
+```html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BLA BLA BLA Festival Ticketing</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f5f5f5;margin:0;padding:20px}
+.wrap{max-width:850px;margin:auto;background:#fff;border-radius:24px;box-shadow:0 8px 30px rgba(0,0,0,.08);overflow:hidden}
+.header{background:#111;color:#fff;padding:30px}.step{display:none;padding:30px}.active{display:block}
+.card{border:2px solid #ddd;border-radius:20px;padding:20px;margin:15px 0;cursor:pointer}.selected{border-color:green}
+.badge{float:right;background:#dff5df;color:green;padding:8px 12px;border-radius:12px}
+input{width:100%;padding:14px;margin:10px 0;border-radius:12px;border:1px solid #ccc}
+button{padding:14px 22px;border:none;border-radius:12px;background:#111;color:#fff;cursor:pointer}
+.secondary{background:#ddd;color:#111}.qris{max-width:320px;width:100%;display:block;margin:20px auto}
+</style>
+</head>
+<body>
+<div class='wrap'>
+<div class='header'>
+<h1>BLA BLA BLA FESTIVAL</h1>
+<h2>KUBU RAYA - PONTIANAK</h2>
+<p>QUBU RESORT • Sunday, April 19, 2026 • 1:00 PM - 10:00 PM</p>
+</div>
+
+<div id='step1' class='step active'>
+<h2>Pilih Tiket</h2>
+<div class='card selected' onclick='pick(this,450000)'>BUNDLING TELKOMSEL VIP <span class='badge'>AVAILABLE</span><br>Rp450.000</div>
+<div class='card' onclick='pick(this,300000)'>NORMAL SALE REGULER <span class='badge'>AVAILABLE</span><br>Rp300.000</div>
+<div class='card' onclick='pick(this,400000)'>NORMAL SALE VIP <span class='badge'>AVAILABLE</span><br>Rp400.000</div>
+
+<h2>Data Pembeli</h2>
+<input placeholder='Nama Lengkap'>
+<input placeholder='Email'>
+<input placeholder='No WhatsApp'>
+<input id='qty' type='number' value='1' min='1' onchange='updateTotal()'>
+<p>Total: <b id='total'>Rp450.000</b></p>
+<button onclick='go(2)'>Lanjut Pembayaran</button>
+</div>
+
+<div id='step2' class='step'>
+<h2>Pembayaran QRIS</h2>
+<img src='qris-ticket-digital.jpg' class='qris'>
+<p>Transfer sesuai nominal: <b id='total2'>Rp450.000</b></p>
+<input type='file'>
+<button class='secondary' onclick='go(1)'>Kembali</button>
+<button onclick='go(3)'>Kirim Pembayaran</button>
+</div>
+
+<div id='step3' class='step'>
+<h1>Terima Kasih 🎉</h1>
+<p>Pembelian berhasil dikirim untuk verifikasi.</p>
+<button onclick='go(1)'>Kembali ke Awal</button>
+</div>
+</div>
+
+<script>
+let price=450000;
+function pick(el,p){
+ document.querySelectorAll('.card').forEach(c=>c.classList.remove('selected'));
+ el.classList.add('selected');
+ price=p; updateTotal();
 }
+function updateTotal(){
+ let q=document.getElementById('qty').value||1;
+ let t=price*q;
+ let txt='Rp'+t.toLocaleString('id-ID');
+ document.getElementById('total').innerText=txt;
+ document.getElementById('total2').innerText=txt;
+}
+function go(n){
+ document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
+ document.getElementById('step'+n).classList.add('active');
+}
+</script>
+</body>
+</html>
+```
